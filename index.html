@@ -1,3 +1,274 @@
+<!DOCTYPE html>
 <html>
-hello
+	<head>
+		<title>Blockchain Ecosystem Payments</title>
+		<link rel="stylesheet" href="/styles.css">
+	</head>
+    <body>
+
+        <div>
+			<h1>Blockchain ecosystem payments </h1>
+		</div>
+
+		<br><br>
+
+		<div>
+			<input type = "text" id = amount placeholder = "Enter amount ..."> </input>  </p>
+			<input type = "button" id = "deposit" value = "DEPOSIT"> </input></p>
+		</div>
+
+		<br><br>
+
+		<div>
+			<button id = "change"> CHANGE </button></p>
+		</div>
+
+		<div>
+			<p>
+				<label for = "pulldown">Month:</label>
+				<select id = "pulldown">
+					<option value = "june">June</option>
+					<option value = "july">July</option>
+					<option value = "august">August</option>
+				</select>
+			</p>
+		</div>
+		
+		<div>
+			<p>
+				<span id = "balance"></span>
+				<span>ETH</span>
+			</p>
+			<p>
+				<span id = "balanceusd"></span>
+				<span>USD</span>
+			</p>
+		</div>
+
+		<div>
+            <!-- <p></p><iframe height = "400" width = "400" frameBorder="0" id = "map" src="https://danieloberhauser123.users.earthengine.app/view/testapp"></iframe></p> -->
+		</div>
+
+			
+		<script src = "https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.36/dist/web3.min.js"></script>
+        <script src = "https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>
+
+        <script>
+            
+                var contract;
+
+                $(document).ready(function()
+                {
+                    web3 = new Web3(web3.currentProvider);
+
+                    var address = "0xb0ec2466ced9db5d181f141c09f2ffa4bda5110b";
+                    var abi = [
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_myid",
+				"type": "bytes32"
+			},
+			{
+				"name": "_result",
+				"type": "string"
+			}
+		],
+		"name": "__callback",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_myid",
+				"type": "bytes32"
+			},
+			{
+				"name": "_result",
+				"type": "string"
+			},
+			{
+				"name": "_proof",
+				"type": "bytes"
+			}
+		],
+		"name": "__callback",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "deposit",
+		"outputs": [],
+		"payable": true,
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "depositnew",
+		"outputs": [],
+		"payable": true,
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [],
+		"name": "InitializePES",
+		"outputs": [],
+		"payable": true,
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getBalance",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "payment_for_ecosystem_service",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "percentage_landcover_change",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	}
+];
+
+                    contract = new web3.eth.Contract(abi, address);
+
+                    contract.methods.getBalance().call().then(function(bal)
+                    {
+						baleth = web3.utils.fromWei(bal, 'ether');
+						$("#balance").html(baleth);
+						$("#balanceusd").html(baleth*4000);
+                    });
+                    
+
+                    
+                    window.addEventListener('load', async () => {
+                        // Modern dapp browsers...
+                        if (window.ethereum) {
+                            window.web3 = new Web3(ethereum);
+                            try {
+                                // Request account access if needed
+                                await ethereum.enable();
+                                // Acccounts now exposed
+                                web3.eth.sendTransaction({/* ... */});
+                            } catch (error) {
+                                // User denied account access...
+                            }
+                        }
+                        // Legacy dapp browsers...
+                        else if (window.web3) {
+                            window.web3 = new Web3(web3.currentProvider);
+                            // Acccounts always exposed
+                            web3.eth.sendTransaction({/* ... */});
+                        }
+                        // Non-dapp browsers...
+                        else {
+                            console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
+                        }
+                    });
+
+
+
+
+
+
+
+
+                })
+
+                $("#deposit").click(function()
+                {
+                    var amt = 1;
+					amt = $("#amount").val().toString();
+					amount = web3.utils.toWei(amt, 'ether');
+					// amount = web3.utils.toWei(amt.toString(), 'ether');
+
+
+                    // web3.eth.getAccounts()
+                    // .then(console.log);
+
+                    web3.eth.getAccounts().then(function(accounts)
+                    {
+                        var acc = accounts[0];
+                        return contract.methods.depositnew(amount).send({from: acc, value: amount});
+                        // return contract.methods.InitializePES().send({from: acc});
+                    }).then(function(tx)
+                    {
+                        console.log(tx);
+                    }).catch(function(tx)
+                    {
+                        console.log(tx);
+                    })
+                })
+			
+				$("#change").click(function()
+				{
+				document.getElementById("map").src = "https://www.zeit.de";
+				})
+
+
+            </script>
+
+
+
+
+
+
+    </body>
+
+
+
 </html>
