@@ -1,0 +1,183 @@
+body {
+    font-family: Roboto-Regular, sans-serif;
+    font-size: 15px;
+}    
+
+* {
+    box-sizing: border-box;
+}
+
+a {
+    text-decoration: none;
+    color:white;
+
+}
+
+a:visited {color: white}
+a:hover {color: rgb(44, 167, 255)}
+
+h1 {
+    font-size: 20px;
+    color: rgb(111, 111, 111);
+}
+
+header {
+    background-color: rgb(165, 165, 165);
+    position: fixed;
+    width: 100%;
+    height: 70px;
+    left: 0;
+    top: 0;
+    /* z-index: 1; */
+
+}
+
+.header .navigation {
+    position: absolute;
+    bottom: 20%;
+    right: 10%;
+    color: rgb(202, 202, 202);
+    text-decoration: none;
+}
+
+.navigation a {
+    margin: 20px;
+    margin-top: 0;
+}
+
+.header .headertext {
+    position: absolute;
+    bottom: 20%;
+    left: 20px;
+    color: white;
+    font-size: 1em;
+}
+
+
+
+.row {
+    background-color: white;
+    position: relative;
+    top: 70px;
+    left: 0;
+    width: 100%;
+}
+
+.row h1 {
+    text-align: center;
+}
+
+.column {
+    float: left;
+    padding: 20px;
+    height: 100%;
+}
+
+.left{
+    width: 25%;
+}
+
+.right {
+    padding: 0px;
+}
+
+.field {
+    cursor: pointer;
+    background-color:white;
+    padding: 20px;
+    border: 10px;
+    font-size: 13px;
+}
+
+.selectedfield {
+    cursor: pointer;
+    background-color:rgb(202, 202, 202);
+    padding: 20px;
+    border: 10px;
+    font-size: 13px;
+}
+
+.field:hover {
+    background-color:rgb(233, 233, 233);
+}
+
+
+
+ .center {
+    width: 50%;
+    padding: 10px;
+    height: 500px;   
+    background-color: rgb(202, 202, 202);
+}
+
+.text {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 560px;
+}
+
+.text a {
+    color:orange;
+}
+
+.text a:hover {
+    color: rgb(44, 167, 255);
+}
+
+.frame {
+    width: 125%;
+    height: 125%;
+    transform: scale(0.8);
+    transform-origin: left top;
+}
+
+.video {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 560px;
+}
+
+input{
+    display: inline;
+    height: 30px;
+    vertical-align: middle;
+    border-radius: 5px;
+}
+
+
+input[type=button]{
+    font-size: 15px;
+    background-color: rgb(208, 208, 208);
+    border: none;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+input[type=number]{
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(208, 208, 208);
+    padding: 3px;
+}
+
+#amount{
+    width: 30%;
+
+}
+
+.blink {
+    animation:blinker 0.5s linear infinite;
+}
+
+.blink {
+    animation: blinker 2s linear infinite;
+    color: rgb(157, 0, 0);
+  }
+  
+  @keyframes blinker {
+    50% {
+      opacity: 0;
+    }
+  }

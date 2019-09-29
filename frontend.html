@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Blockchain Ecosystem Payments</title>
+		<link rel="stylesheet" href="/styles.css">
+	</head>
+    <body>
+
+
+
+
+        <header class = "header">
+                    <span class = "headertext"><b>Blockchain</b> <br> Ecosystem Payments </span>
+                    <nav class = "navigation"> 	
+                        <a href = "index.html" > ABOUT     </a>  
+                        <a href = "frontend.html" > FRONTEND </a>  
+                    </nav>
+        </header>
+
+
+
+
+        <section class = "row">
+            <h1 class = "blinks" id = "LIVE">LIVE Frontend</h1>
+        </section>
+
+
+
+
+		<section class = "row">
+
+
+
+
+			<div class = "column left">
+                <h1>Status</h1>
+                <p>
+                    There are currently
+                    <b id = "balance"></b>
+					Ether (roughly
+					<b id = "balanceusd" font></b>
+					USD) stored in the smart contract.
+                </p>
+                
+                <p>
+                    <b id="transactioncount"></b> payments amounting to
+                    <b id="transactionvolume"></b>
+                    Ether (roughly <b id = "transactionvolumeusd"></b> USD) have already been transferred to the community.
+                </p>
+
+                <p>
+                    You want to contribute to conserving the wildlife corridor? Simply deposit Ether into the smart contract: <br>    
+                </p>
+                <p>
+                    <input class = "input" type = "number" id = "amount" placeholder = "ETH ..." width = 20px> </input>
+                    <input class = "input" type = "button" id = "deposit" value = "Deposit"> </input>
+                </p>
+			</div>
+		
+
+
+
+			<div class = "column center">
+					<!-- <img width = 100% src = "img/map.jpg"> -->
+					<iframe class = "frame" frameBorder="0" id = "map" scrolling = "no" src="https://danieloberhauser123.users.earthengine.app/view/june"></iframe>
+			</div>
+
+
+
+
+			<div class = "column right" id = "columnright">
+                
+                
+                
+                <div class = "field" id = "jun_field">
+                    <b>June </b><br>
+                    <span>Assessment executed:</span><b id = "6_ts"></b><br>
+                    <span>Land cleared in corridor:</span><b id = "6_lcc"></b><br>
+                </div>
+
+
+
+                <div class = "field" id = "jul_field">
+                        <b>July </b><br>
+                        <span>Assessment executed:</b><b id = "7_ts"></b><br>
+                        <span>Land cleared in corridor:</b><b id = "7_lcc"></b><br>
+                </div>
+
+
+
+                <div class = "field" id = "aug_field">
+                        <b>August </b><br>
+                        <span>Assessment executed:</span><b id = "8_ts"></b><br>
+                        <span>Land cleared in corridor:</span><b id = "8_lcc"></b><br>
+                </div>
+
+
+
+                <div class = "field" id = "sep_field">
+                        <b>September </b><br>
+                        <span>Assessment executed:</b><b id = "9_ts"></b><br>
+                        <span>Land cleared in corridor:</b><b id = "9_lcc"></b><br>
+                </div>
+
+
+
+                <div class = "field" id = "oct_field">
+                        <b>October </b><br>
+                        <span>Assessment executed:</span><b id = "10_ts"></b><br>
+                        <span>Land cleared in corridor:</span><b id = "10_lcc"></b><br>
+                </div>
+			</div>
+			
+
+
+		</section>
+
+
+
+
+
+
+
+
+		<script src = "https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.36/dist/web3.min.js"></script>
+        <script src = "https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>
+
+        <script>
+
+
+            function NA(version) {
+                        $("#balance").html("-NA-").css('color', 'red');
+                        $("#balanceusd").html("-NA-").css('color', 'red');
+                        $("#transactioncount").html("-NA-").css('color', 'red');
+                        $("#transactionvolume").html("-NA-").css('color', 'red');
+                        $("#transactionvolumeusd").html("-NA-").css('color', 'red');
+                        if(version == 1) { $("#LIVE").html("Please switch Metamask to Ropsten testnet!").css('color', 'red')};
+                        if(version == 2) { $("#LIVE").html("Please install METAMASK browser plugin and activate Ropsten testnet").css('color', 'red')};
+                        for (i = 6; i < 11; i++) {
+                            $("#" + i + "_lcc").html("-NA-").css('color', 'red');
+                            $("#" + i + "_ts").html("-NA-").css('color', 'red');
+                        }
+                    }
+            
+            window.addEventListener('load', async () => {
+                // Modern dapp browsers...
+                if (window.ethereum) {
+                    window.web3 = new Web3(ethereum);
+                    try {
+                        // Request account access if needed
+                        await ethereum.enable();
+                        if (await web3.eth.net.getNetworkType().then() != "ropsten") {
+                            alert("Please switch Metamask to Ropsten testnet or the website cannot fetch data and interact with the smart contract!");
+                            NA(1);
+                        };
+                        // Acccounts now exposed
+                        web3.eth.sendTransaction({/* ... */});
+                    } catch (error) {
+                        // User denied account access...
+                    }
+                }
+                // Legacy dapp browsers...
+                else if (window.web3) {
+                    window.web3 = new Web3(web3.currentProvider);
+                    // Acccounts always exposed
+                    web3.eth.sendTransaction({/* ... */});
+                }
+                // Non-dapp browsers...
+                else {
+                    console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
+                    alert("It looks like you have not installed  Metamask browser plugin, which is needed to interact with the Ethereum Blockchain. Without the plugin, the website cannot fetch data and interact with the smart contract. Please install Metamask and activate Ropsten testnet.");
+                    NA(2);
+                }
+            });
+
+
+
+            
+
+
+            var contract;
+
+            $(document).ready(function()
+            {
+                                    
+                $("#jun_field").removeClass().addClass("selectedfield")                
+                
+                web3 = new Web3(web3.currentProvider);
+
+                var address = "0xf307420591904fe205f69e9c4faa139341dbb701";
+                var abi = [
+{
+    "constant": false,
+    "inputs": [
+        {
+            "name": "_myid",
+            "type": "bytes32"
+        },
+        {
+            "name": "_result",
+            "type": "string"
+        }
+    ],
+    "name": "__callback",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+},
+{
+    "constant": false,
+    "inputs": [
+        {
+            "name": "_myid",
+            "type": "bytes32"
+        },
+        {
+            "name": "_result",
+            "type": "string"
+        },
+        {
+            "name": "_proof",
+            "type": "bytes"
+        }
+    ],
+    "name": "__callback",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+},
+{
+    "constant": false,
+    "inputs": [],
+    "name": "deposit",
+    "outputs": [],
+    "payable": true,
+    "stateMutability": "payable",
+    "type": "function"
+},
+{
+    "constant": false,
+    "inputs": [
+        {
+            "name": "_month",
+            "type": "uint256"
+        }
+    ],
+    "name": "initPES",
+    "outputs": [],
+    "payable": true,
+    "stateMutability": "payable",
+    "type": "function"
+},
+{
+    "constant": true,
+    "inputs": [],
+    "name": "getBalance",
+    "outputs": [
+        {
+            "name": "",
+            "type": "uint256"
+        }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+},
+{
+    "constant": true,
+    "inputs": [
+        {
+            "name": "_month",
+            "type": "uint256"
+        }
+    ],
+    "name": "getLCC",
+    "outputs": [
+        {
+            "name": "",
+            "type": "uint256"
+        }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+},
+{
+    "constant": true,
+    "inputs": [
+        {
+            "name": "_month",
+            "type": "uint256"
+        }
+    ],
+    "name": "getTSS",
+    "outputs": [
+        {
+            "name": "",
+            "type": "uint256"
+        }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+},
+{
+    "constant": true,
+    "inputs": [],
+    "name": "PES_amount",
+    "outputs": [
+        {
+            "name": "",
+            "type": "uint256"
+        }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+}
+];
+
+                contract = new web3.eth.Contract(abi, address);
+
+
+
+                contract.methods.getBalance().call().then(async function(bal)
+                {
+                    baleth = await web3.utils.fromWei(bal, 'ether');
+                    balethusd = baleth * 173;
+                    $("#balance").html(baleth.toString().slice(0,4));
+                    $("#balanceusd").html(balethusd.toString().slice(0,6));
+                });
+
+                var transactioncount = 0;
+
+                async function getLCCs () {                
+                    month = 6;
+
+                    while(month < 11) {
+                        await contract.methods.getLCC(month).call().then(function(lcc) {    
+
+                            if(lcc != 0) {
+                                    $("#" + month + "_lcc").html(" " + lcc + "%");
+                                } else {
+                                    $("#" + month + "_lcc").html(" pending");
+                                }
+
+                            if (lcc != 0 && lcc < 20) {
+                                transactioncount = transactioncount + 1;
+                                $("#" + month + "_lcc").css("color","green");
+                            }
+                        });
+                        
+                        month = month + 1;
+
+                    }
+                    $("#transactioncount").html(transactioncount + " ");
+                    $("#transactionvolume").html(" " + transactioncount * 0.5 + " ");
+                    $("#transactionvolumeusd").html(" " + transactioncount * 0.5 * 173 + " ");
+                }
+                getLCCs();
+                
+
+
+                async function getTSs () {                
+                    m = 6;
+
+                    while(m < 11) {
+                        await contract.methods.getTSS(m).call().then(function(ts) {    
+                            var dt = new Date(ts * 1000);
+                            if(dt < Date.now()) {
+                                var dtshort = dt.toISOString().slice(0,10);
+                                $('#' + m + '_ts').html(" " + dtshort);
+                            } else {
+                                $('#' + m + '_ts').html(" pending");
+                            }
+
+                            // if(dt < Date.now()) {
+                            // document.getElementById('#' + month + '_ts').style="color:green";
+                            // }
+                        });
+                        
+                        m = m + 1;
+
+                    }
+                }
+                getTSs();
+           
+
+
+                // function that creates NA
+                
+
+
+            })
+
+
+
+
+
+
+
+
+
+
+
+                $("#deposit").click(function()
+                {
+                    var amt = 1;
+					amt = $("#amount").val().toString();
+					amount = web3.utils.toWei(amt, 'ether');
+					// amount = web3.utils.toWei(amt.toString(), 'ether');
+
+
+                    // web3.eth.getAccounts()
+                    // .then(console.log);
+
+                    web3.eth.getAccounts().then(function(accounts)
+                    {
+                        var acc = accounts[0];
+                        return contract.methods.deposit().send({from: acc, value: amount});
+                        // return contract.methods.InitializePES().send({from: acc});
+                    }).then(function(tx)
+                    {
+                        console.log(tx);
+                    }).catch(function(tx)
+                    {
+                        console.log(tx);
+                    })
+                })
+			
+
+                
+
+
+
+
+
+                function whiten(){
+                    $("#jun_field").removeClass("selectedfield").addClass("field");
+                    $("#jul_field").removeClass("selectedfield").addClass("field");
+                    $("#aug_field").removeClass("selectedfield").addClass("field");
+                    $("#sep_field").removeClass("selectedfield").addClass("field");
+                    $("#oct_field").removeClass("selectedfield").addClass("field");
+                };
+
+                $("#jun_field").click(function(){
+                    if ($(this).hasClass("field")) {
+                        whiten();
+                        $(this).removeClass().addClass("selectedfield");
+                        $("#map").attr("src", "https://danieloberhauser123.users.earthengine.app/view/augu");
+                    }
+                });
+                $("#jul_field").click(function(){
+                    if ($(this).hasClass("field")) {
+                        whiten();
+                        $(this).removeClass().addClass("selectedfield");
+                        $("#map").attr("src", "https://danieloberhauser123.users.earthengine.app/view/july");
+                    }
+                });
+                $("#aug_field").click(function(){
+                    if ($(this).hasClass("field")) {                    
+                        whiten();
+                        $(this).removeClass().addClass("selectedfield");
+                        $("#map").attr("src", "https://danieloberhauser123.users.earthengine.app/view/augu");
+                    }
+                });
+                $("#sep_field").click(function(){
+                    if ($(this).hasClass("field")) {
+                        whiten();
+                        $(this).removeClass().addClass("selectedfield");
+                        $("#map").attr("src", "https://danieloberhauser123.users.earthengine.app/view/sept");
+                    }
+                });
+                $("#oct_field").click(function(){
+                    if ($(this).hasClass("field")) {
+                        whiten();
+                        $(this).removeClass().addClass("selectedfield");
+                        $("#map").attr("src", "https://danieloberhauser123.users.earthengine.app/view/octo");
+                    }
+                });
+
+
+
+
+
+
+
+
+            </script>
+
+
+
+
+
+
+    </body>
+
+
+
+</html>
